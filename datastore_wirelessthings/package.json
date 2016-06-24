@@ -1,0 +1,13 @@
+{
+  "name": "datastore_wirelessthings",
+  "version": "1.0.0",
+  "description": "datastore for wireless things driver",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "httpdispatcher": "^1.0.0",
+    "influx": "^4.2.0",
+    "jsonfile": "^2.3.1",
+    "mqtt": "^1.11.2"
+  }
+}
