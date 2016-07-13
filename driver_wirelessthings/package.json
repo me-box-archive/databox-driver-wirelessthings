@@ -1,0 +1,15 @@
+{
+  "name": "driver_wirelessthings",
+  "version": "1.0.0",
+  "description": "need to run modules/serial_node.js",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.73.0",
+    "serialport": "^4.0.1"
+  }
+}
