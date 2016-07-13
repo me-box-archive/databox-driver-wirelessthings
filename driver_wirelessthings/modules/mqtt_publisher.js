@@ -44,7 +44,7 @@ exports.onDataOverSerial = function(data){
 			console.log(JSON.stringify(jsonLLAP));
 			request.post(
 			{
-				url: 'http://localhost:8080/reading',
+				url: 'http://localhost:8090/reading',
 				body: jsonLLAP,
 				json: true
 			}, 	
