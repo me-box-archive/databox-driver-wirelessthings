@@ -12,24 +12,18 @@ const PORT=8090;
 app.set('port', port);
 var app = express();
 
-/* mqtt publisher setup */
-var mqtt    = require('mqtt');
-mqttClient  = mqtt.connect('mqtt://localhost');
-
 var jsonParser = bodyParser.json()
-
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
 
 // app setup
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// routes setup
 app.use('/api', api);
 
 // catch 404 and forward to error handler
@@ -63,9 +57,9 @@ app.use(function(err, req, res, next) {
 
 var server = http.createServer(app);
 
-/**
- * Event listener functions for HTTP server
- */
+
+// Event listener functions for HTTP server
+ 
 
 function onListening() {
   var addr = server.address();
