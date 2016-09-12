@@ -1,9 +1,0 @@
-version '2'
-
-services: 
-  datastore_wirelessthings:
-    build: datastore_wirelessthings
-    ports: 
-
-  driver_wirelessthings:
-    build: driver_wirelessthings
