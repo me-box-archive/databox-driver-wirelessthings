@@ -56,7 +56,6 @@ var detectSerialOnDatabox = function()
 	});
 }
 
-
 var llapParser = function(emitter, buffer){
 	var incomingData = "";
 	incomingData += buffer.toString();
@@ -98,7 +97,9 @@ databox_directory.register_driver('Wireless Things','databox-driver-wirelessthin
     databox_directory.register_driver()
 		for (i in sensor_types) {
 			var sensor_id = databox_directory.register_sensor_type(sensor_types[i], function () {
-				registrered_sensor_types.push({sensor_types[i]:sensor_id});
+				var foo = {};
+				foo[sensor_types[i]] = sensor_id;
+				registrered_sensor_types.push(foo);
 			});	
 		}
 	resolve();
@@ -110,6 +111,8 @@ databox_directory.register_driver('Wireless Things','databox-driver-wirelessthin
 
 })
 .catch((err) => {console.log("[Error]" + err)});
+
+detectSerialOnMac();
 
 
 

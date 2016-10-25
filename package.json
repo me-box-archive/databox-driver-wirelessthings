@@ -1,15 +1,29 @@
 {
-  "name": "driver_wirelessthings",
-  "version": "1.0.0",
-  "description": "need to run modules/serial_node.js",
-  "main": "app.js",
+  "name": "databox-driver-wirelessthings",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "build": "docker build -t databox/databox-driver-wirelessthings .",
+    "deploy": "docker tag databox/databox-driver-wirelessthings registry.upintheclouds.org/databox-driver-wirelessthings && docker push registry.upintheclouds.org/databox-driver-wirelessthings",
+    "build-arm": "docker build -f Dockerfile-arm -t databox/databox-driver-wirelessthings-arm .",
+    "deploy-arm": "docker tag databox/databox-driver-wirelessthings-arm registry.upintheclouds.org/databox-driver-wirelessthings-arm && docker push registry.upintheclouds.org/databox-driver-wirelessthings-arm",
+    "clean": "node ./node_modules/modclean/bin/modclean.js -p ./node_modules/ -r",
+    "getshell": "docker exec -i -t databox-driver-wirelessthings /bin/bash",
+    "kill": "docker kill databox-driver-wirelessthings",
+    "attach": "docker attach databox-driver-wirelessthings",
+    "shell": "docker run -i -t databox/databox-driver-wirelessthings /bin/bash",
+    "local": "docker run -i -t databox/databox-driver-wirelessthings",
+    "tail": "docker logs -f databox-driver-wirelessthings"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "request": "^2.73.0",
+    "body-parser": "~1.13.2",
+    "cookie-parser": "~1.3.5",
+    "debug": "~2.2.0",
+    "express": "~4.13.1",
+    "jade": "~1.11.0",
+    "jsonfile": "^2.4.0",
+    "request": "^2.75.0",
     "serialport": "^4.0.1"
   }
 }

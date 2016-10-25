@@ -43,9 +43,9 @@ exports.onDataOverSerial = function(data){
 			case "BATT":
 				sensor_value = parseFloat(message.substring(4,9));
 			case "TILT":
-				if(message.substring(4,6) == OFF)
+				if(message.substring(4,6) == "OFF")
 					sensor_value = 0;
-				if(message.substring(4,5) == ON)
+				if(message.substring(4,5) == "ON")
 					sensor_value = 1;
 				break;
 			default: 
@@ -103,6 +103,7 @@ exports.onDataOverSerial = function(data){
 
 		} // end of ok to post
 
+	};
 };
 
 exports.update_ids = function (vendor, driver, datastore , sensor_types) {
@@ -112,7 +113,4 @@ exports.update_ids = function (vendor, driver, datastore , sensor_types) {
 	this.sensor_types = sensor_types;
 	this.all_registered = true;
 
-}
-
-
-
+};
