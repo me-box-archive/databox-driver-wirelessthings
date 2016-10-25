@@ -1,0 +1,32 @@
+{
+	"manifest-version": 1,
+
+	"name": "databox-driver-wirelessthings",
+	"version": "0.1.0",
+
+	"description": "A Databox driver for the wireless things sensors",
+	"author": "James Colley <James.Colley@nottingham.ac.uk> ()",
+	"license": "MIT",
+	"databox-type":"driver",
+	"tags": [
+		"driver",
+		"sensor",
+		"sensors"
+	],
+
+	"homepage": "https://github.com/me-box/databox-driver-wirelessthings",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/me-box/databox-driver-wirelessthings.git"
+	},
+
+	"network-permissions": [
+	],
+	"hardware-permissions": [
+		"usb"
+	],
+
+	"resource-requirements": {
+    "store":"databox-store-blob"
+	}
+}
