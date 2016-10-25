@@ -1,8 +1,13 @@
 var serport;
 var lhelper = require('./modules/llap_helper');
-var mqtt = require('./modules/mqtt_publisher');
+var serial_processor = require('./modules/serial_processor');
 var serialport = require('serialport');
 var exec = require('child_process').exec;
+
+var sensor_types = ["temperature", "humidity", "tilt", "button1", "button2", "button3", "button4", "button5", "battery", "light"];
+var registrered_sensor_types = [];
+
+var databox_directory = require('./utils/databox_directory');
 
 exports.getPath = function()
 {
@@ -51,8 +56,9 @@ var detectSerialOnDatabox = function()
 	});
 }
 
-var incomingData = "";
+
 var llapParser = function(emitter, buffer){
+	var incomingData = "";
 	incomingData += buffer.toString();
 	incomingData = incomingData.replace(/^[^]*?a/,'a');
 	while (incomingData.length >= 12) {
@@ -68,10 +74,44 @@ var attemptConnection = function(port)
 	serport.on("open", function () {
 		console.log('* connection to a serial port successful ! *');
 		serport.on('data', function(data){
-			mqtt.onDataOverSerial(data);
+			serial_processor.onDataOverSerial(data);
 		});
 	});
 }
 
-mqtt.init();
-detectSerialOnDatabox();
+var vendor_id;
+var driver_id;
+var datastore_id;
+
+databox_directory.register_driver('Wireless Things','databox-driver-wirelessthings', 'Wireless things sensr driver')
+.then((ids) => {
+  console.log(ids);
+  vendor_id = ids['vendor_id'];
+  driver_id = ids['driver_id'];
+
+  return databox_directory.get_datastore_id('databox-store-blob');
+})
+.then((storeid) => {
+  datastore_id = storeid;
+  serial_processor.update_ids(vendor_id, driver_id, datastore_id, registrered_sensor_types)
+  return new Promise((resolve, reject) => {
+    databox_directory.register_driver()
+		for (i in sensor_types) {
+			var sensor_id = databox_directory.register_sensor_type(sensor_types[i], function () {
+				registrered_sensor_types.push({sensor_types[i]:sensor_id});
+			});	
+		}
+	resolve();
+	});
+})
+.then(() => {
+  detectSerialOnDatabox();
+
+
+})
+.catch((err) => {console.log("[Error]" + err)});
+
+
+
+
+
