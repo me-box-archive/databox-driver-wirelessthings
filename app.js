@@ -42,7 +42,7 @@ var detectSerialOnMac = function()
 
 var detectSerialOnDatabox = function()
 {
-	var port;
+	/*var port;
 	console.log('* attempting to connect to a serial port on data box*');
 	serialport.list(function (e, ports) {
 		ports.forEach(function(obj) {
@@ -53,7 +53,8 @@ var detectSerialOnDatabox = function()
 				}
 			}
 		});
-	});
+	});*/
+	attemptConnection('/dev/ttyACM0');
 }
 
 var llapParser = function(emitter, buffer){
@@ -82,7 +83,7 @@ var vendor_id;
 var driver_id;
 var datastore_id;
 
-databox_directory.register_driver('Wireless Things','databox-driver-wirelessthings', 'Wireless things sensr driver')
+databox_directory.register_driver('Wireless Things','databox-driver-wirelessthings', 'Wireless things sensor driver')
 .then((ids) => {
   console.log(ids);
   vendor_id = ids['vendor_id'];
@@ -94,25 +95,27 @@ databox_directory.register_driver('Wireless Things','databox-driver-wirelessthin
   datastore_id = storeid;
   serial_processor.update_ids(vendor_id, driver_id, datastore_id, registrered_sensor_types)
   return new Promise((resolve, reject) => {
-    databox_directory.register_driver()
+	//TODO this is wrong 
+    /*databox_directory.register_driver()
 		for (i in sensor_types) {
 			var sensor_id = databox_directory.register_sensor_type(sensor_types[i], function () {
 				var foo = {};
 				foo[sensor_types[i]] = sensor_id;
 				registrered_sensor_types.push(foo);
 			});	
-		}
+		}*/
 	resolve();
 	});
 })
 .then(() => {
   detectSerialOnDatabox();
-
-
+  
+  var loop = function() {console.log("Looping")}
+  setInterval(loop, 10000)
 })
 .catch((err) => {console.log("[Error]" + err)});
 
-detectSerialOnMac();
+//detectSerialOnMac();
 
 
 

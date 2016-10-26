@@ -23,7 +23,7 @@
 	"network-permissions": [
 	],
 	"hardware-permissions": [
-		"usb"
+		"serial"
 	],
 
 	"resource-requirements": {
