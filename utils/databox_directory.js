@@ -109,12 +109,11 @@ exports.register_sensor = function(driver_id, sensor_type_id, datastore_id, vend
             "location" : location
   		}
 	};
-
 	request(options, function (error, response, body) {
   		if (error) {
-    	 return done(error,{});
+    	 return done(error);
   		}
-  		return done(null,body);
+  		return done(body);
 	});
 }
 
