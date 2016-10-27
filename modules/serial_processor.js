@@ -2,7 +2,7 @@ var lhelper = require('./llap_helper');
 var request = require('request');
 var databox_directory = require('../utils/databox_directory.js');
 
-var DATABOX_STORE_BLOB_ENDPOINT = process.env.DATABOX_STORE_BLOB_ENDPOINT;
+var DATASTORE_TIMESERIES_ENDPOINT = process.env.DATASTORE_TIMESERIES_ENDPOINT;
 
 var vendor_id;
 var driver_id;
@@ -13,7 +13,7 @@ var all_registered = false;
 
 function saveReading(s_id,v_id,data) {
 	var options = {
-	  uri: DATABOX_STORE_BLOB_ENDPOINT + '/data',
+	  uri: DATASTORE_TIMESERIES_ENDPOINT + '/data',
 	  method: 'POST',
 	  json: 
 	  {
