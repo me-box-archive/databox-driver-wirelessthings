@@ -5,7 +5,7 @@ var serialport = require('serialport');
 var exec = require('child_process').exec;
 
 var sensor_types = ["temperature", "humidity", "tilt", "button1", "button2", "button3", "button4", "button5", "battery", "light"];
-var registrered_sensor_types = [];
+var registered_sensor_types = [];
 
 var databox_directory = require('./utils/databox_directory');
 
@@ -93,23 +93,20 @@ databox_directory.register_driver('Wireless Things','databox-driver-wirelessthin
 })
 .then((storeid) => {
   datastore_id = storeid;
-  serial_processor.update_ids(vendor_id, driver_id, datastore_id, registrered_sensor_types)
-  return new Promise((resolve, reject) => {
-	//TODO this is wrong 
-    /*databox_directory.register_driver()
+  var proms = [];
 		for (i in sensor_types) {
-			var sensor_id = databox_directory.register_sensor_type(sensor_types[i], function () {
-				var foo = {};
-				foo[sensor_types[i]] = sensor_id;
-				registrered_sensor_types.push(foo);
-			});	
-		}*/
-	resolve();
-	});
+   			proms.push(new Promise((resolve, reject) => {
+				databox_directory.register_sensor_type(sensor_types[i], function (result) {
+					registered_sensor_types[result.description] = result.id;				
+					resolve();
+				});
+		    }));
+		}
+   	return Promise.all(proms);
 })
 .then(() => {
+  serial_processor.update_ids(vendor_id, driver_id, datastore_id, registered_sensor_types);
   detectSerialOnDatabox();
-  
   var loop = function() {console.log("Looping")}
   setInterval(loop, 10000)
 })

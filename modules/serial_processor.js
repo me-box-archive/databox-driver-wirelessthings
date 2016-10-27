@@ -27,83 +27,86 @@ function saveReading(s_id,v_id,data) {
 
 
 exports.onDataOverSerial = function(data){
-	var payload = data.toString();
-	var ok_to_post = true;
-	
-	if (lhelper.isValid(payload)) {
-		var message = lhelper.message(payload);
-		var device_id = lhelper.deviceName(payload);
-		var llap_code = message.substring(0,4);
-		var sensor_value;
+	if(this.all_registered) {
+		var payload = data.toString();
+		var ok_to_post = true;
+		
+		if (lhelper.isValid(payload)) {
+			var message = lhelper.message(payload);
+			var device_id = lhelper.deviceName(payload);
+			var llap_code = message.substring(0,4);
+			var sensor_value;
 
-		switch(llap_code) {
-			case "TMPA":
-			case "TEMP":
-			case "RHUM":
-			case "BATT":
-				sensor_value = parseFloat(message.substring(4,9));
-			case "TILT":
-				if(message.substring(4,6) == "OFF")
-					sensor_value = 0;
-				if(message.substring(4,5) == "ON")
-					sensor_value = 1;
-				break;
-			default: 
-				ok_to_post = false;
-				break;
-		}
+			switch(llap_code) {
+				case "TMPA":
+				case "TEMP":
+				case "RHUM":
+				case "BATT":
+					sensor_value = parseFloat(message.substring(4,9));
+				case "TILT":
+					if(message.substring(4,6) == "OFF")
+						sensor_value = 0;
+					if(message.substring(4,5) == "ON")
+						sensor_value = 1;
+					break;
+				default: 
+					ok_to_post = false;
+					break;
+			}
 
-		if(ok_to_post) {
-			local_sensor_id = device_id + "-" + llap_code;
-			if(registered_sensors[local_sensor_id]) {
-				saveReading(registered_sensors[local_sensor_id], this.vendor_id, sensor_value);
-			} 
-			else {
-				//register the sensor then post the data
-				var sensor_type_id;
-				var unit;
-				var short_unit;
-				var description = "wireless things sensor";
-				var location = "unknown"
-				switch(llap_code) {
-					case "TMPA":
-					case "TEMP":
-						sensor_type_id = sensor_types["temperature"];
-						unit = "Degrees Celcius";
-						short_unit = "ºC";
-						break;
-					case "RHUM":
-						sensor_type_id = sensor_types["humidity"];
-						unit = "Relative Humidity";
-						short_unit = "%";
-						break;
-					case "BATT":
-						sensor_type_id = sensor_types["battery"];
-						unit = "Volts";
-						short_unit = "V";
-						break;
-					case "TILT":
-						sensor_type_id = sensor_types["tilt"];
-						unit = "na";
-						short_unit = "na";
-						break; 
-					case "BATT":
-						sensor_value = parseFloat(message.substring(4,9));
-					default: 
-						console.log("impossible");
-						break;
-				} // end of switch
+			if(ok_to_post) {
+				local_sensor_id = device_id + "-" + llap_code;
+				if(registered_sensors[local_sensor_id] !== undefined) {
+					saveReading(registered_sensors[local_sensor_id], this.vendor_id, sensor_value);
+				} 
+				else {
+					//register the sensor then post the data
+					var sensor_type_id;
+					var unit;
+					var short_unit;
+					var description = "wireless things sensor";
+					var location = "unknown"
+					switch(llap_code) {
+						case "TMPA":
+						case "TEMP":
+							sensor_type_id = this.sensor_types["temperature"];
+							unit = "Degrees Celcius";
+							short_unit = "ºC";
+							break;
+						case "RHUM":
+							sensor_type_id = this.sensor_types["humidity"];
+							unit = "Relative Humidity";
+							short_unit = "%";
+							break;
+						case "BATT":
+							sensor_type_id = this.sensor_types["battery"];
+							unit = "Volts";
+							short_unit = "V";
+							break;
+						case "TILT":
+							sensor_type_id = this.sensor_types["tilt"];
+							unit = "na";
+							short_unit = "na";
+							break; 
+						case "BATT":
+							sensor_value = parseFloat(message.substring(4,9));
+						default: 
+							console.log("impossible");
+							break;
+					} // end of switch
 
-				databox_directory.register_sensor(this.driver_id, sensor_type_id, this.datastore_id, this.vendor_id, local_sensor_id, unit, short_unit, description, location, function (result) {
-					registered_sensors[local_sensor_id] = result.id;
-					saveReading(result.id, this.vendor_id, sensor_value);
-				})
+					databox_directory.register_sensor(this.driver_id, sensor_type_id, this.datastore_id, this.vendor_id, local_sensor_id, unit, short_unit, description, location, function (result) {
+						registered_sensors[local_sensor_id] = result.id;
+						saveReading(result.id, this.vendor_id, sensor_value);
+					})
 
-			} // end of sensor not registered
+				} // end of sensor not registered
 
-		} // end of ok to post
+			} // end of ok to post
 
-	};
+		};
+	} else
+		console.log("broken");
 };
 
 exports.update_ids = function (vendor, driver, datastore , sensor_types) {
